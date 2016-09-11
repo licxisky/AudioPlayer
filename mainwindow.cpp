@@ -11,24 +11,34 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //创建windows窗口
     setWindowFlags(Qt::FramelessWindowHint);
+    //设置窗口头透明
     setAttribute(Qt::WA_TranslucentBackground);
 
+    //设置播放进度条长度为0
     ui->horizontalSlider->setRange(0, 0);
     ui->tableWidget->hide();
-    ui->tableWidget->hideColumn(2);
+    //隐藏表格第三列
+    //ui->tableWidget->hideColumn(2);
+    //设置音量大小
     volume=80;
 
+    //创建右键菜单栏
     createContextMenu();
+    //创建系统托盘图标
     createSystemTrayIcon();
 
     playList=new QMediaPlaylist;
+    //设置循环播放
     playList->setPlaybackMode(QMediaPlaylist::Loop);
     player=new QMediaPlayer;
     player->setPlaylist(playList);
     player->setVolume(volume);
 
+    //进度条移动--调整播放时间
     connect(ui->horizontalSlider, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
+    //单击表格播放
     connect(ui->tableWidget, SIGNAL(cellClicked(int,int)), this, SLOT(playTo(int, int)));
 
     connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
